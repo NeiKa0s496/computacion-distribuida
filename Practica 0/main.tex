@@ -1,0 +1,154 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{array}
+\usepackage{booktabs} % líneas
+\usepackage{caption}  % captions
+\usepackage{lipsum}   % texto de ejemplo
+
+% Formato títulos
+\titleformat{\section}{\large\bfseries\centering}{}{0em}{}
+\titleformat{\subsection}{\normalsize\bfseries\centering}{}{0em}{}
+
+\begin{document}
+\begin{titlepage}
+    \begin{center}
+        % Encabezado con logos
+        \includegraphics[width=10cm]{FCiencias logo.png}
+        
+        \vspace{2cm}
+        
+        % Universidad
+        {\Large \textbf{UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO}}\\[0.5cm]
+        {\large \textbf{FACULTAD DE CIENCIAS}}\\[2cm]
+        
+        % Línea decorativa
+        \rule{0.8\linewidth}{0.6pt}\\[1cm]
+        
+        % Título
+        {\Huge \textbf{Práctica No. 0}}\\[1cm]
+        {\Large \textit{Computación Distribuida}}\\
+        
+        \rule{0.8\linewidth}{0.6pt}\\[2cm]
+        
+        \vspace{1cm}
+        
+        % Profesor
+        {\large \textbf{Profesor}}\\[0.5cm]
+        Mauricio Riva Palacio Orozco\\[1cm]
+        
+        % Ayudantes
+        {\large \textbf{Ayudantes}}\\[0.5cm]
+        Alan Alexis Martínez López\\
+        Yael Antonio Calzada Martín\\
+        
+        \vfill
+        
+    \end{center}
+\end{titlepage}
+
+% Segunda página
+\section*{Resultados del ejecutable}
+
+% Primera tabla
+\begin{table}[h!]
+\centering
+\begin{tabular}{>{\centering\arraybackslash}m{3cm} 
+                >{\centering\arraybackslash}m{3.5cm} 
+                >{\centering\arraybackslash}m{3.5cm} 
+                >{\centering\arraybackslash}m{3.5cm}}
+\toprule
+\textbf{Número de nodos} & \textbf{Tiempo de primera ejecución} & \textbf{Tiempo de segunda ejecución} & \textbf{Tiempo de tercera ejecución} \\
+\midrule
+1  & 319100 ms & 313581 ms & 331619 ms\\
+2  & 295714 ms & 306733 ms & 281635 ms\\
+3  & 295393 ms & 297703 ms & 313636 ms\\
+4  & 292762 ms & 288012 ms & 300133 ms\\
+6  & 286828 ms & 288414 ms & 298721 ms\\
+8  & 298989 ms & 293188 ms & 287997 ms\\
+10 & 413811 ms & 390277 ms & 427566 ms\\
+12 & 506065 ms & 516371 ms & 405573 ms\\
+15 & 548148 ms & 471123 ms & 534077 ms\\
+20 & 588623 ms & 609268 ms & 624246 ms\\
+\bottomrule
+\end{tabular}
+\caption{Resultados obtenidos: 1 }
+\footnotemark
+\end{table}
+\footnotetext{1. Distro Endeavour OS, más info: nproc --all, output: 16}
+
+% Segunda tabla
+\begin{table}[h!]
+\centering
+\begin{tabular}{>{\centering\arraybackslash}m{3cm} 
+                >{\centering\arraybackslash}m{3.5cm} 
+                >{\centering\arraybackslash}m{3.5cm} 
+                >{\centering\arraybackslash}m{3.5cm}}
+\toprule
+\textbf{Número de nodos} & \textbf{Tiempo de primera ejecución} & \textbf{Tiempo de segunda ejecución} & \textbf{Tiempo de tercera ejecución} \\
+\midrule
+1 & 506196 ms & 480081 ms & 493399 ms\\
+2 & 382852 ms & 381603 ms & 389044 ms\\
+3 & 370685 ms & 361672 ms & 370453 ms\\
+4 & 361672 ms & 377239 ms & 406371 ms\\
+6 & 441291 ms & 457613 ms & 467692 ms\\
+8 & 508943 ms & 492427 ms & 497954 ms\\
+10 & 583343 ms & 584911 ms & 544694 ms\\
+12 & 612409 ms & 609728 ms & 630929 ms\\
+15 & 689702 ms & 695179 ms & 706427 ms\\
+20 & 855298 ms & 874303 ms & 857465 ms\\
+
+\bottomrule
+\end{tabular}
+\caption{Resultados obtenidos: 2}
+\footnotemark
+\end{table}
+\footnotetext{2: Distro Ubuntu, más info: nproc -all, output: 4}
+
+% Tercera tabla
+\begin{table}[h!]
+\centering
+\begin{tabular}{>{\centering\arraybackslash}m{3cm} 
+                >{\centering\arraybackslash}m{3.5cm} 
+                >{\centering\arraybackslash}m{3.5cm} 
+                >{\centering\arraybackslash}m{3.5cm}}
+\toprule
+\textbf{Número de nodos} & \textbf{Tiempo de primera ejecución} & \textbf{Tiempo de segunda ejecución} & \textbf{Tiempo de tercera ejecución} \\
+\midrule
+1  & 451159 ms & 401879 ms & 421990 ms \\
+2  & 357833 ms & 367666 ms & 337383 ms \\
+3  & 355437 ms & 346538 ms & 347404 ms \\
+4  & 356263 ms & 340479 ms & 339899 ms \\
+6  & 433517 ms & 410577 ms & 428069 ms \\
+8  & 470635 ms & 426747 ms & 454978 ms \\
+10 & 488058 ms & 483652 ms & 492719 ms \\
+12 & 519021 ms & 549711 ms & 501823 ms \\
+15 & 558319 ms & 581823 ms & 608190 ms \\
+20 & 708915 ms & 677945 ms & 732338 ms \\
+\bottomrule
+\end{tabular}
+\caption{Resultados obtenidos: 3}
+\footnotemark
+\end{table}
+\footnotetext{3. Distro Ubuntu, más info: nproc -all, output: 8}
+\newpage
+\vspace{1cm}
+\noindent\textbf{Explicación:¿Por qué algunas ejecuciones tardan más o tardan menos?}\\
+\vspace{.5cm}
+
+1: A mi parecer el envio de mensajes del MPI puede ver la comunicación entre mensajes retrasada por diversos procesos corriendo en segundo plano, también en la explicación de la clase (ayudantía) cuando se nos mencionó acerca de los procesos que son llevados a cabo por acción del procesador y de las condiciones de competencia, respecto a eso se nos dijo a grandes rasgos que si usas más procesos de los núcleos que hay (suponiendo que 8 núcleos es un estándar), algunos procesos se tienen que empezar a turnar (porque se ejecuta uno a la vez) y eso causa que tarde mucho más.\\
+
+2: Yo pienso que las variaciones en el tiempo al momento de la ejecución se deben
+principalmente a la forma en la que MPI reparte el trabajo a los distintos procesos y a
+la carga que tiene el sistema en cada momento. Entre mas procesos tengamos el
+tiempo puede llegar a disminuir ya que el trabajo se divide, aunque puede aumentar
+si excedemos los limites de nuestro equipo. Las diferencias que hay a la hora de
+ejecutarse con los mismos procesos pueden deberse a procesos en segundo plano o
+a recursos compartidos de mi sistema operativo en ese momento.\\
+
+3: Por lo que entiendo, que hace MPI es distribuir las tareas o procesos (que en este caso son sumas), entre una cantidad de nodos que se especifican al ejecutar el algoritmo. Así, cada nodo se encarga de una parte de la suma y luego envía su resultado como un mensaje a otro nodo, de manera que el trabajo se reparte. El objetivo debería ser reducir el tiempo de ejecución, aunque en mis pruebas ocurrió lo contrario: conforme aumentaba la cantidad de nodos, también aumentaba el tiempo que tardaban en realizar la suma. Supongo que esto pasa por varias razones relacionadas con el ambiente en el que se realizaron las pruebas: tenía abierto el navegador web, influyen el tipo de procesador, la cantidad de memoria RAM y el sistema operativo, entre otros factores. Pero también se debe a que, mientras más nodos haya, más mensajes deben enviarse y mayor es la coordinación y sincronización necesaria entre procesos.
+
+\end{document}
