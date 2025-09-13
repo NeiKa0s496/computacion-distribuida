@@ -97,7 +97,7 @@ def main():
         break
 
     # gr'afica completa
-    print(f"\n Gráfica ingresado:")
+    print(f"\n Gráfica :")
     for nodo, vecinos in sorted(grafica.items()):
         print(f"  {nodo}: {', '.join(sorted(vecinos))}")
 
@@ -105,16 +105,16 @@ def main():
     nodos = list(grafica.keys())
     print(f"\nNodos disponibles: {', '.join(sorted(nodos))}")
 
-    # Pedir el nodo inicial
+    # Pide el nodo inicial
     while True:
-        nodo_inicio = input("\nIngresa el nodo para iniciar: ").strip()
+        nodo_inicio = input("\nEl nodo para iniciar: ").strip()
         if nodo_inicio in grafica:
             break
         else:
             print(f"'{nodo_inicio}' no existe")
 
 
-    # Ejecutar BFS
+    # BFS
     resultado = bfs(grafica, nodo_inicio)
 
     # Resultados
