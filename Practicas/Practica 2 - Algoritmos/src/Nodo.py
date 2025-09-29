@@ -17,3 +17,19 @@ class Nodo:
     def get_id(self) -> int:
         '''Regresa el id del nodo.'''
         return self.id_nodo
+    
+    def get_vecinos(self) -> list:
+        '''Regresa la lista de vecinos del nodo.'''
+        return self.vecinos
+    
+    def get_canal_de_entrada(self) -> simpy.Store:
+        '''Regresa el canal de entrada del nodo.'''
+        return self.canal_entrada
+    
+    def get_canal_de_salida(self) -> simpy.Store:
+        '''Regresa el canal de salida del nodo.'''
+        return self.canal_salida
+    
+    def __str__(self) -> str:
+        '''Regresa una representación en string del nodo.'''
+        return f'Nodo: (ID: {self.id_nodo}), Vecinos: {self.vecinos}'
