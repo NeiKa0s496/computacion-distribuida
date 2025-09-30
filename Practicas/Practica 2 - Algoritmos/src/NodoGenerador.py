@@ -23,7 +23,7 @@ class NodoGenerador(Nodo):
         if self.id_nodo == 0: 
             self.padre = self.id_nodo # Enviamos GO a todos los vecinos
             self.mensajes_esperados = len(self.vecinos) #Los mensajes que espera recibir sean vecinos
-            yield env.timeout(TICK) #en Simpy dice que es una instrucción que pausa la ejecución por un tiempo determinado.
+            yield env.timeout(TICK) #(en Simpy dice que es una instrucción que pausa la ejecución por un tiempo determinado
             self.canal_salida.envia(["GO", self.id_nodo], self.vecinos)
         
         # Procesamos mensajes entrantes
