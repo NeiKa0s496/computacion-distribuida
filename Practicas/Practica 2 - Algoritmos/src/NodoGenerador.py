@@ -15,25 +15,19 @@ class NodoGenerador(Nodo):
         # Atributos propios del algoritmo
         self.padre = None if id_nodo != 0 else id_nodo # Si es el nodo distinguido, el padre es el mismo 
         self.hijos = list()
-        self.mensajes_esperados = len(vecinos) # Cantidad de mensajes que esperamos
-        self.recibio_go = False 
-        self.expected_msgs = 0
+        self.mensajes_esperados = len(self.vecinos)
     
     def genera_arbol(self, env):
-        '''3.2 Algoritmo 4 – Construcción del árbol generador.'''
+        #'''3.2 Algoritmo 4 – Construcción del árbol generador.'''
         # Si (0) es el nodo dsitinguido , inicia
         if self.id_nodo == 0: 
-            self.padre = self.id_nodo
-            # Enviamos GO a todos los vecinos 
+            self.padre = self.id_nodo # Enviamos GO a todos los vecinos 
             yield env.timeout(TICK) #en Simpy dice que es una instrucción que pausa la ejecución por un tiempo determinado.
-            self.canal_salida.envia("GO", self.vecinos)
+            self.canal_salida.envia(["GO", self.id_nodo], self.vecinos)
         
         # Procesamos mensajes entrantes
         while True:
             mensaje = yield self.canal_entrada.get()
-            # Extraemos el tipo de mensaje que recibimos
-            mensaje = mensaje[1]
-            
         # Explicación 
         # El nodo distinguido envía GO() a sus vecinos. Cada nodo que recibe un GO por primera vez
         # establece a su padre y reenvía el mensaje. Cuando un nodo ha recibido todas las respuestas,
