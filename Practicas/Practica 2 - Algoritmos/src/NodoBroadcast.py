@@ -25,23 +25,35 @@ class NodoBroadcast(Nodo):
         # Tú código aquí
         
         # Si el nodo es distinguido (0) inicia
-        if self.id_nodo == 0 and self.mensaje is not None and not self.recibio_mensaje:
+        if self.id_nodo == 0 and self.mensaje is not None:
             self.recibio_mensaje = True
-            # Enviamos el mensaje a todos los vecinos
+            self.recibido.add(self.id_nodo)
+            
+            print(f'Tiempo {env.now}: Nodo {self.id_nodo} inicia broadcast con mensaje "{self.mensaje}"')
+            
+            # Envía el mensaje a los demás nodos
             yield env.timeout(TICK)
-            self.canal_salida.envia(("GO", self.mensaje), self.vecinos)
+            for vecino in self.vecinos:
+                self.canal_salida.envia((self.id_nodo, self.mensaje), [vecino])
         
-        # Procesamos mensajes entrantes
+        # Procesa lso mensajes entrantes
         while True:
             mensaje = yield self.canal_entrada.get()
+            nodo_emisor, contenido = mensaje
             
-            if isinstance(mensaje, tuple) and mensaje[0] == "GO":
-                _, data = mensaje
-                if not self.recibio_mensaje:
-                    self.recibio_mensaje = True
-                    self.mensaje = data
-                    
-                    # Reenviamos el mensaje a los vecinos
-                    if self.vecinos:  # Si tenemos vecinos
-                        yield env.timeout(TICK)
-                        self.canal_salida.envia(("GO", data), self.vecinos)
+            # Si es un mensaje nuevo
+            if nodo_emisor not in self.recibido:
+                self.recibido.add(nodo_emisor)
+                self.recibio_mensaje = True
+                self.mensaje = contenido
+                
+                print(f'Tiempo {env.now}: Nodo {self.id_nodo} recibe mensaje "{contenido}" del Nodo {nodo_emisor}')
+                
+                # Reenvía excepto a 0
+                vecinos_a_reenviar = [v for v in self.vecinos if v != nodo_emisor]
+                if vecinos_a_reenviar:
+                    yield env.timeout(TICK)
+                    for vecino in vecinos_a_reenviar:
+                        self.canal_salida.envia((self.id_nodo, contenido), [vecino])
+            
+            yield env.timeout(TICK) 

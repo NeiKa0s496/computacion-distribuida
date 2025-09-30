@@ -16,6 +16,8 @@ class NodoGenerador(Nodo):
         self.padre = None if id_nodo != 0 else id_nodo # Si es el nodo distinguido, el padre es el mismo 
         self.hijos = list()
         self.mensajes_esperados = len(vecinos) # Cantidad de mensajes que esperamos
+        self.recibio_go = False 
+        self.expected_msgs = 0
     
     def genera_arbol(self, env):
         '''3.2 Algoritmo 4 – Construcción del árbol generador.'''
@@ -29,9 +31,6 @@ class NodoGenerador(Nodo):
         # Procesamos mensajes entrantes
         while True:
             mensaje = yield self.canal_entrada.get()
-            # Extraemos el id del nodo que envio el  mensaje
-            id_recibido = mensaje[0]
-
             # Extraemos el tipo de mensaje que recibimos
             mensaje = mensaje[1]
             
@@ -44,10 +43,6 @@ class NodoGenerador(Nodo):
                 if not self.recibio_go:  # Primera vez que recibe GO
                     self.recibio_go = True
                     self.padre = 0
-                # Si no tenemos padre
-                if self.padre == None : 
-                    # se asigna el padre
-                    self.padre = id_recibido
                     
                     # Reenviamos GO 
                     vecinos_para_reenviar = [v for v in self.vecinos if v != self.padre]
