@@ -6,9 +6,6 @@
 - Alan Alexis Martínez López
 <p>
 
-### Integrantes:
-
-
 ## Tabla de Contenidos
 - [1. Introducción](#1-introducción)
 - [2. Objetivos](#2-uso)
@@ -47,7 +44,8 @@ pytest src/test.py
 ## Estructura de la práctica
 
 ```plaintext
-README.md                    
+README.md
+requirements.txt                   
 src
 ├── Canales/                 # Sistema de comunicación entre nodos
 │   ├── CanalBroadcast.py
