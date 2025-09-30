@@ -21,7 +21,8 @@ class NodoGenerador(Nodo):
         #'''3.2 Algoritmo 4 – Construcción del árbol generador.'''
         # Si (0) es el nodo dsitinguido , inicia
         if self.id_nodo == 0: 
-            self.padre = self.id_nodo # Enviamos GO a todos los vecinos 
+            self.padre = self.id_nodo # Enviamos GO a todos los vecinos
+            self.mensajes_esperados = len(self.vecinos) #Los mensajes que espera recibir sean vecinos
             yield env.timeout(TICK) #en Simpy dice que es una instrucción que pausa la ejecución por un tiempo determinado.
             self.canal_salida.envia(["GO", self.id_nodo], self.vecinos)
         
@@ -49,7 +50,7 @@ class NodoGenerador(Nodo):
                 else:
                     # Si ya tiene un nodo padre asignado 
                     yield env.timeout(TICK)
-                    # -1 indica que ya se ha asignado un nodo padre al nodo que previamente le había mandado msj con GO 
+                    # -1 indica que ya se ha asignado un nodo padre 
                     self.canal_salida.envia(["BACK", -1], [mensaje[1]])
                         
             
@@ -62,10 +63,10 @@ class NodoGenerador(Nodo):
                     self.hijos.append(mensaje[1]) 
                     
                 if self.mensajes_esperados == 0:
-                    if self.padre != self.id_nodo: # Si el nodo actual no es su propio nodo padre
+                    if self.padre != self.id_nodo:
                         yield env.timeout(TICK)
-                        # Continuamos mandando mensajes BACK a los nodos padres, hasta llegar al nodo distinguido
+                        # Se mandan mensajes BACK a los nodos padres, hasta llegar al nodo distinguido
                         self.canal_salida.envia(["BACK", self.id_nodo], [self.padre])
                     else:
-                        # El nodo distinguido recibió el último mensaje BACK - terminó la construcción
+                        # El nodo distinguido recibió el último mensaje BACK
                         break
