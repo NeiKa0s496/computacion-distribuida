@@ -16,15 +16,18 @@ class NodoBroadcast(Nodo):
         self.canal_entrada = canal_entrada
         self.canal_salida = canal_salida
         self.mensaje = mensaje
+        self.recibido = set 
+        self.recibio_mensaje = False
 
     def broadcast(self, env):
         ''' Algoritmo de Broadcast. Desde el nodo distinguido (0)
             vamos a enviar un mensaje a todos los demás nodos.'''
         # Tú código aquí
-        # Si soy el nodo raíz y tengo un mensaje, inicio el broadcast
+        
+        # Si el nodo es distinguido (0) inicia
         if self.id_nodo == 0 and self.mensaje is not None and not self.recibio_mensaje:
             self.recibio_mensaje = True
-            # Enviamos el mensaje a todos los vecinos (hijos en el árbol)
+            # Enviamos el mensaje a todos los vecinos
             yield env.timeout(TICK)
             self.canal_salida.envia(("GO", self.mensaje), self.vecinos)
         
@@ -38,7 +41,7 @@ class NodoBroadcast(Nodo):
                     self.recibio_mensaje = True
                     self.mensaje = data
                     
-                    # Reenviamos el mensaje a nuestros vecinos (hijos)
+                    # Reenviamos el mensaje a los vecinos
                     if self.vecinos:  # Si tenemos vecinos
                         yield env.timeout(TICK)
                         self.canal_salida.envia(("GO", data), self.vecinos)
