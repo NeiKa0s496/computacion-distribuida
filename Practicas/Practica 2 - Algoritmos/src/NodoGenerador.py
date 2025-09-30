@@ -32,36 +32,40 @@ class NodoGenerador(Nodo):
         # El nodo distinguido envía GO() a sus vecinos. Cada nodo que recibe un GO por primera vez
         # establece a su padre y reenvía el mensaje. Cuando un nodo ha recibido todas las respuestas,
         # envía un BACK a su padre.
-            
-            if mensaje == "GO":
-                if not self.recibio_go:  # Primera vez que recibe GO
-                    self.recibio_go = True
-                    self.padre = 0
+            # Primera vez que recibe GO
+            if mensaje [0] == "GO":
+                if self.padre is None: 
+                    self.padre = mensaje[1] # Asignamos como nodo padre al nodo que envió el mensaje GO
+                    self.mensajes_esperados = len(self.vecinos) - 1
                     
-                    # Reenviamos GO 
-                    vecinos_para_reenviar = [v for v in self.vecinos if v != self.padre]
-                    self.mensajes_esperados = len(vecinos_para_reenviar)
-                    
-                    if vecinos_para_reenviar:
+                    if self.mensajes_esperados == 0:
                         yield env.timeout(TICK)
-                        self.canal_salida.envia("GO", vecinos_para_reenviar)
+                        # Enviamos un mensaje BACK al nodo que previamente le mandó msj y que sabemos se convirtió en su padre
+                        self.canal_salida.envia(["BACK", self.id_nodo], [self.padre])
                     else:
-                        # Si no tenemos vecinos para reenviar, enviamos BACK a nuestro padre
                         yield env.timeout(TICK)
-                        self.canal_salida.envia(("BACK", self.id_nodo), [self.padre])
+                        # Continuamos enviando mensaje GO a sus demás vecinos (a excepción del nodo que le mandó el mensaje)
+                        self.canal_salida.envia(["GO", self.id_nodo], [v for v in self.vecinos if v != self.padre])
                 else:
-                    # enviamos BACK
+                    # Si ya tiene un nodo padre asignado 
                     yield env.timeout(TICK)
-                    self.canal_salida.envia(("BACK", None), [self.padre])
+                    # -1 indica que ya se ha asignado un nodo padre al nodo que previamente le había mandado msj con GO 
+                    self.canal_salida.envia(["BACK", -1], [mensaje[1]])
+                        
             
-            elif isinstance(mensaje, tuple) and mensaje[0] == "BACK":
-                _, val_set = mensaje
+            # SI SE RECIBE UN MENSAJE BACK
+            elif mensaje[0] == "BACK":
                 self.mensajes_esperados -= 1
                 
-                if val_set is not None:
-                    self.hijos.append(val_set)
-                
-                if self.mensajes_esperados == 0 and self.id_nodo != 0:
-                    # Enviamos BACK al padre
-                    yield env.timeout(TICK)
-                    self.canal_salida.envia(("BACK", self.id_nodo), [self.padre])
+                if mensaje[1] != -1:
+                    # El nodo que envió el mensaje back, es hijo del nodo actual
+                    self.hijos.append(mensaje[1]) 
+                    
+                if self.mensajes_esperados == 0:
+                    if self.padre != self.id_nodo: # Si el nodo actual no es su propio nodo padre
+                        yield env.timeout(TICK)
+                        # Continuamos mandando mensajes BACK a los nodos padres, hasta llegar al nodo distinguido
+                        self.canal_salida.envia(["BACK", self.id_nodo], [self.padre])
+                    else:
+                        # El nodo distinguido recibió el último mensaje BACK - terminó la construcción
+                        break
