@@ -12,8 +12,6 @@ class NodoGenerador(Nodo):
         self.vecinos = vecinos
         self.canal_entrada = canal_entrada
         self.canal_salida = canal_salida
-        
-        # Atributos propios del algoritmo
         self.padre = None if id_nodo != 0 else id_nodo # Si es el nodo distinguido, el padre es el mismo 
         self.hijos = list()
         self.mensajes_esperados = len(vecinos) # Cantidad de mensajes que esperamos
@@ -30,6 +28,11 @@ class NodoGenerador(Nodo):
         # Procesamos mensajes entrantes
         while True:
             mensaje = yield self.canal_entrada.get()
+            # Extraemos el id del nodo que envio el  mensaje
+            id_recibido = mensaje[0]
+
+            # Extraemos el tipo de mensaje que recibimos
+            mensaje = mensaje[1]
             
         # Explicación 
         # El nodo distinguido envía GO() a sus vecinos. Cada nodo que recibe un GO por primera vez
@@ -40,6 +43,10 @@ class NodoGenerador(Nodo):
                 if not self.recibio_go:  # Primera vez que recibe GO
                     self.recibio_go = True
                     self.padre = 0
+                # Si no tenemos padre
+                if self.padre == None : 
+                    # se asigna el padre
+                    self.padre = id_recibido
                     
                     # Reenviamos GO 
                     vecinos_para_reenviar = [v for v in self.vecinos if v != self.padre]
@@ -55,7 +62,7 @@ class NodoGenerador(Nodo):
                 else:
                     # enviamos BACK
                     yield env.timeout(TICK)
-                    self.canal_salida.envia(("BACK", None), [0])
+                    self.canal_salida.envia(("BACK", None), [self.padre])
             
             elif isinstance(mensaje, tuple) and mensaje[0] == "BACK":
                 _, val_set = mensaje
