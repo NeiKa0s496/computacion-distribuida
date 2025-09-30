@@ -21,3 +21,24 @@ class NodoBroadcast(Nodo):
         ''' Algoritmo de Broadcast. Desde el nodo distinguido (0)
             vamos a enviar un mensaje a todos los demás nodos.'''
         # Tú código aquí
+        # Si soy el nodo raíz y tengo un mensaje, inicio el broadcast
+        if self.id_nodo == 0 and self.mensaje is not None and not self.recibio_mensaje:
+            self.recibio_mensaje = True
+            # Enviamos el mensaje a todos los vecinos (hijos en el árbol)
+            yield env.timeout(TICK)
+            self.canal_salida.envia(("GO", self.mensaje), self.vecinos)
+        
+        # Procesamos mensajes entrantes
+        while True:
+            mensaje = yield self.canal_entrada.get()
+            
+            if isinstance(mensaje, tuple) and mensaje[0] == "GO":
+                _, data = mensaje
+                if not self.recibio_mensaje:
+                    self.recibio_mensaje = True
+                    self.mensaje = data
+                    
+                    # Reenviamos el mensaje a nuestros vecinos (hijos)
+                    if self.vecinos:  # Si tenemos vecinos
+                        yield env.timeout(TICK)
+                        self.canal_salida.envia(("GO", data), self.vecinos)
