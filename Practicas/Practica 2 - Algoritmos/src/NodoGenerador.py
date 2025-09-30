@@ -12,6 +12,7 @@ class NodoGenerador(Nodo):
         self.vecinos = vecinos
         self.canal_entrada = canal_entrada
         self.canal_salida = canal_salida
+        # Atributos propios del algoritmo
         self.padre = None if id_nodo != 0 else id_nodo # Si es el nodo distinguido, el padre es el mismo 
         self.hijos = list()
         self.mensajes_esperados = len(vecinos) # Cantidad de mensajes que esperamos
