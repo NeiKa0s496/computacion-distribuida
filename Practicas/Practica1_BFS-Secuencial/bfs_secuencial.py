@@ -50,7 +50,7 @@ def bfs(grafica, nodo_inicio):
     
     return n_visitado
 
-# Probar con árbol A (por lo del requsito 1 del pdf)
+# Prueba con árbol A (por lo del requsito 1 del pdf)
 if __name__ == "__main__":
     resultado = bfs(grafica, 'A') #Llamamos a la funcion bfs
     print("Recorrido BFS desde 'A':", resultado)

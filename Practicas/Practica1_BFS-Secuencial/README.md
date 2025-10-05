@@ -11,7 +11,9 @@
 - Alan Alexis Martínez López
 
 ### Alumnos
--pendiente xd
+ Blancas Ochoa Alan -316227364
+ Carbajal Galicia Hilda Joana -318087223
+ Fuentes Ortega Diego Tonatiuh -320067660
 
 ---
 
