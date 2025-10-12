@@ -9,6 +9,7 @@ class Nodo:
     def __init__(self, id_nodo: int, vecinos: list, canal_entrada: simpy.Store,
                  canal_salida: simpy.Store):
         '''Inicializa los atributos del nodo.'''
+        
         self.id_nodo = id_nodo
         self.vecinos = vecinos
         self.canal_entrada = canal_entrada
