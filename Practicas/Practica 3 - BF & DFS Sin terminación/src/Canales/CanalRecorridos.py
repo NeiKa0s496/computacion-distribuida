@@ -5,7 +5,7 @@ class CanalRecorridos(Canal):
     '''
     Clase que modela un canal, permite enviar mensajes one-to-many.
     '''
-    def __init__(self, env, capacidad=simpy.core.Infinity):
+    def __init__(self, env, capacidad = simpy.core.Infinity):
         self.env = env
         self.capacidad = capacidad
         self.canales = []
