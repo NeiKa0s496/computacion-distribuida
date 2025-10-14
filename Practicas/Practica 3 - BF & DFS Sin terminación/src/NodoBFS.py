@@ -61,7 +61,7 @@ class NodoBFS(Nodo):
                     vecinos_sin_padre = [vecino for vecino in self.vecinos if vecino != self.padre]
                     self.msj_esperados = len(vecinos_sin_padre)
                     
-                    # if (expected_msg_i = 0) then... else...
+                    # if (expected_msg_i = 0) then
                     if self.msj_esperados == 0:
                         # send back(yes, d+1) to p_parent
                         yield env.timeout(TICK)
