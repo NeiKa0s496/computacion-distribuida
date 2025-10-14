@@ -33,7 +33,7 @@ class NodoDFS(Nodo):
             
             # let k ∈ neighbors_i; send GO([i]) to p_k; children_i ← {k}
             if self.vecinos:
-                k = min(self.vecinos) #escojo el vecino menor porque se puede dar a entender eso en los test
+                k = min(self.vecinos) #siguiendo la observación de elegir el de menor del pdf que nos dieron
                 yield env.timeout(TICK)
                 self.canal_salida.envia(["GO", self.id_nodo, [self.id_nodo]], [k])
                 self.hijos = [k]
