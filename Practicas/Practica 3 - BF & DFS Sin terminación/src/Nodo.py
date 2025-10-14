@@ -17,8 +17,7 @@ class Nodo:
 
     def get_id(self) -> int:
         '''Regresa el id del nodo.'''
-        def get_id(self) -> int:
-            return self.id_nodo
+        return self.id_nodo
         
     def get_vecinos(self) -> list:
         '''Regresa la lista de vecinos del nodo.'''
