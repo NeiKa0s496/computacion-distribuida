@@ -16,7 +16,7 @@ class NodoBroadcast(Nodo):
         self.canal_entrada = canal_entrada
         self.canal_salida = canal_salida
         self.mensaje = mensaje
-        self.recibido = set 
+        self.recibido = set()
         self.recibio_mensaje = False
 
     def broadcast(self, env):
@@ -25,11 +25,8 @@ class NodoBroadcast(Nodo):
         # Tú código aquí
         
         # Si el nodo es distinguido (0) inicia
-        if self.id_nodo == 0 and self.mensaje is not None:
-            self.recibio_mensaje = True
-            self.recibido.add(self.id_nodo)
-            
-            print(f'Tiempo {env.now}: Nodo {self.id_nodo} inicia broadcast con mensaje "{self.mensaje}"')
+        if self.id_nodo and self.mensaje == 0:
+            print(f'Tiempo {env.now}: Nodo {self.id_nodo} envia mensaje "{self.mensaje}"')
             
             # Envía el mensaje a los demás nodos
             yield env.timeout(TICK)
