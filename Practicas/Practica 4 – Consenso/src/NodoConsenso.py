@@ -25,3 +25,18 @@ class NodoConsenso(Nodo):
     def consenso(self, env, f):
         '''El algoritmo de consenso.'''
         # Aquí va su implementación
+        
+        #Los nodos que fallarán:
+        if self.id_nodo < f:
+            self.fallare = True
+            
+        # Comprueba si el conjunto `self.New` no está vacío. Si no lo está,
+        # esperará usando `env.timeout(TICK)` antes de enviar
+        # los mensajes a través del canal `self.canal_salida` a sus vecinos. El mensaje tendrá 
+        # el conjunto `self.New` y el `id_nodo` del nodo que se enviará a todos los vecinos 
+        # especificados en `self.vecinos`.
+        
+        if len(self.New) !=0:
+            yield env.timeout(TICK)
+            self.canal_salida.envia((self.New,self.id_nodo),self.vecinos) 
+
