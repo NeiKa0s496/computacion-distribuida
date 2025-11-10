@@ -6,11 +6,6 @@
 - Alan Alexis Martínez López
 <p>
 
-## Integrantes:
-- Carbajal Galicia Hilda Joana -318087223\\
-- Fuentes Ortega Diego Tonatiuh -320067660\\
-- Blancas Ochoa Alan -316227364\\
-
 ## Tabla de Contenidos
 - [1. Introducción](#1-introducción)
 - [2. Uso](#2-uso)
