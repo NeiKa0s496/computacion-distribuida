@@ -9,12 +9,6 @@
 ### Ayudantes
 - Adrián Felipe Fernández Romero
 - Alan Alexis Martínez López
-
-### Alumnos
- Blancas Ochoa Alan -316227364
- Carbajal Galicia Hilda Joana -318087223
- Fuentes Ortega Diego Tonatiuh -320067660
-
 ---
 
 ## Estructura de la práctica
