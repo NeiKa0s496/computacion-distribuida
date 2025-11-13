@@ -1,0 +1,366 @@
+\documentclass[12pt]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+%\documentclass{scrartcl}
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{algpseudocode}
+\usepackage{amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}   % imágenes
+\usepackage{geometry}   % márgenes
+\usepackage{xcolor}     % colores
+\usepackage{mdframed}   % recuadros
+\usepackage{enumitem}   % listas con control
+\usepackage{kantlipsum}   % alineación de texto
+\geometry{margin=1.5cm}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsthm}
+
+\algnewcommand{\When}[1]{\State \textbf{when} #1 \textbf{do}}
+\algnewcommand{\ForEach}[1]{\State \textbf{for each} #1 \textbf{do}}
+\renewcommand{\qed}{\hfill\blacksquare}
+\algnewcommand{\EndFor}{\State}
+\newcommand{\qedwhite}{\hfill \ensuremath{\Box}}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=8pt,
+  frame=single,
+  framesep=6pt,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  escapeinside={(*@}{@*)},
+  literate={<-}{{$\leftarrow$}}1
+}
+
+\begin{document}
+
+% ---------------- ENCABEZADO CON LOGOS ----------------
+\begin{center}
+    \hrule
+    \vspace{0.3cm}
+
+    \hfill
+
+    
+    \vspace{1cm}
+    \begin{minipage}{0.7\textwidth}
+        \centering
+        {\medium \textbf{UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO}}\\[0.2cm]
+        {\medium \textbf{FACULTAD DE CIENCIAS}}\\[0.2cm]
+        {\medium \textbf{COMPUTACIÓN DISTRIBUIDA}}\\[0.2cm]
+        {\medium \textbf{TAREA 3}}\\
+    \end{minipage}
+    \vspace{0.3cm}
+\end{center}
+
+\vspace{0.8cm}
+
+% ---------------- DATOS ----------------
+\mbox{}\hfill 2026-1
+\newline
+\hrule
+% ---------------- EJERCICIOS ----------------
+\section*{EJERCICIO 1}
+\noindent Demuestra que el siguiente protocolo resuelve el consenso en un sistema síncrono donde hasta \( f < n \) procesos que pueden fallar.
+
+
+\begin{algorithm}
+\caption{Function Consensus($v_i$)}
+\begin{algorithmic}[1]
+\State $V_i \leftarrow v_i;$ $prev_i \leftarrow \perp;$
+\State \textbf{when} $r = 1, 2, \ldots, f + 1$ \textbf{do} \% r: round number \%
+\State \textbf{begin\_round}
+\State \hspace{1em} \textbf{if} $(prev_i \neq V_i)$ \textbf{then} \textbf{foreach} $j \neq i$: send $(V_i)$ to $p_j$, \textbf{endif};
+\State \hspace{1em} let $rec\_from$ be the set of values received during $r$;
+\State \hspace{1em} $prev_i \leftarrow V_i$;
+\State \hspace{1em} \textbf{if} $(rec\_from \neq \emptyset)$ \textbf{then} $V_i \leftarrow \min(\{V_i\} \cup rec\_from)$ \textbf{endif}
+\State \textbf{end\_round};
+\State \textbf{return} $(V_i)$;
+\end{algorithmic}
+\end{algorithm}
+
+\subsection*{Terminación}
+\noindent El protocolo se ejecuta exactamente \( f + 1 \) rondas. Cada proceso no fallido completa todas las rondas y devuelve un valor return \((V_i)\). $\therefore$ la terminación se satisface.
+
+\subsection*{Validez}
+\noindent Supongamos que todos los procesos tienen el mismo valor de entrada \( v \). Inicialmente, para cada proceso \( i \), \( V_i = v \) y \( prev_i = \bot \). En la primera ronda, para cada proceso \( i \), \( prev_i \neq V_i \), por lo que cada proceso envía \( v \) a todos los demás. Cada proceso recibe \( v \) de todos los procesos no fallidos. Ent., cada proceso establece \( prev_i \) a \( V_i \) (que es \( v \)) y actualiza \( V_i \) al mínimo de \( \{V_i\} \) y \( rec\_from \). Como \( rec\_from \) contiene \( v \), tenemos que \( \min(\{v\} \cup rec\_from) = v \). Así, \( V_i \) permanece \( v \). En rondas posteriores, \( prev_i = V_i = v \), por lo que no se envían mensajes y \( V_i \) no cambia. Por lo tanto, después de \( f + 1 \) rondas, cada proceso decide \( v \). La validez se satisface.
+
+\subsection*{Acuerdo}
+\noindent Supongamos que tenemos \( N \) como el conjunto de procesos no fallidos. Sea \( m \) el valor mínimo que es recibido por cualquier proceso en \( N \) durante las rondas 1 a \( f + 1 \). Este valor \( m \) existe y es el valor que será decidido por todos los procesos no fallidos. Tq. \( r \) la primera ronda en la que algún proceso en \( N \) recibe \( m \). Entonces \( r \leq f + 1 \). 
+
+\section*{EJERCICIO 2}
+
+\begin{algorithm}[H]
+\caption{Function Consensus($v_i$)}
+\begin{algorithmic}[1]
+\State $V_i \leftarrow [\perp, \ldots, v_i, \ldots, \perp];$ $New_i \leftarrow \{(v_i,i)\};$
+\State \textbf{when} $r = 1, 2, \ldots, f + 1$ \textbf{do} \% r: round number \%
+\State \textbf{begin\_round}
+\State \hspace{1em} (\(\alpha\)) \textbf{if} $(New_i \neq \emptyset)$ \textbf{then foreach} $j \neq i$: send $(New_i)$ to $p_j$ \textbf{endif};
+\State \hspace{1em} let $rec\_from[j] =$ set received from $p_j$ during $r$ (\(\emptyset\) if no msg);
+\State \hspace{1em} $New_i \leftarrow \emptyset$;
+\State \hspace{1em} \textbf{foreach} $j \neq i$: \textbf{foreach} $(v,k) \in rec\_from[j]$:
+\State \hspace{1em} (\(\beta\)) \textbf{if} $(V_i[k] = \perp)$ \textbf{then}
+\State \hspace{3em} $V_i[k] \leftarrow v;$ $New_i \leftarrow New_i \cup \{(v,k)\}$ \textbf{endif}
+\State \textbf{end\_round};
+\State let $v =$ first non-$\perp$ value of $V_i$;
+\State \textbf{return} $(v)$;
+\end{algorithmic}
+\end{algorithm}
+
+Es necesario ejecutar f+1 rondas en el protocolo de consenso para garantizar que todos los procesos no fallidos acuerden el mismo valor. Si un proceso falla en una ronda, su información podría no haberse propagado completamente, se asegura que cualquier valor inicial de un proceso no fallido haya sido compartido con todos los demás procesos no fallidos, incluso si hasta f procesos fallan durante la ejecución.
+
+\end{itemize}
+
+\section*{EJERCICIO 3}
+\section*{Ejecución del Protocolo de Consenso}
+
+\textbf{Parámetros:} $n = 4$, $f = 2$, $f + 1 = 3$ rondas
+
+\textbf{Procesos:} $p_0$, $p_1$, $p_2$, $p_3$
+
+\textbf{Valores iniciales:} $p_0 = 0$, $p_1 = 1$, $p_2 = 2$, $p_3 = 3$
+
+\textbf{Fallas:} $p_1$ y $p_2$ fallan en la ronda 1 sin enviar mensajes
+
+\subsection*{Inicialización}
+\begin{itemize}
+    \item $p_0$: $V_0 = [0, \perp, \perp, \perp]$, $New_0 = \{(0,0)\}$
+    \item $p_1$: $V_1 = [\perp, 1, \perp, \perp]$, $New_1 = \{(1,1)\}$ (\textbf{falla})
+    \item $p_2$: $V_2 = [\perp, \perp, 2, \perp]$, $New_2 = \{(2,2)\}$ (\textbf{falla})
+    \item $p_3$: $V_3 = [\perp, \perp, \perp, 3]$, $New_3 = \{(3,3)\}$
+\end{itemize}
+
+\subsection*{Ronda 1}
+
+\textbf{Envío de mensajes:}
+\begin{itemize}
+    \item $p_0$ envía $New_0 = \{(0,0)\}$ a $p_1, p_2, p_3$ (solo $p_3$ recibe)
+    \item $p_3$ envía $New_3 = \{(3,3)\}$ a $p_0, p_1, p_2$ (solo $p_0$ recibe)
+    \item $p_1$ y $p_2$ no envían mensajes (fallidos)
+\end{itemize}
+
+\textbf{Recepción y actualización:}
+
+\begin{itemize}
+    \item $p_0$:
+    \begin{itemize}
+        \item $rec\_from[1] = \emptyset$, $rec\_from[2] = \emptyset$, $rec\_from[3] = \{(3,3)\}$
+        \item $New_0 \leftarrow \emptyset$
+        \item Procesa $(3,3)$: $V_0[3] = \perp \Rightarrow V_0[3] = 3$, $New_0 = \{(3,3)\}$
+        \item $V_0 = [0, \perp, \perp, 3]$, $New_0 = \{(3,3)\}$
+    \end{itemize}
+    
+    \item $p_3$:
+    \begin{itemize}
+        \item $rec\_from[0] = \{(0,0)\}$, $rec\_from[1] = \emptyset$, $rec\_from[2] = \emptyset$
+        \item $New_3 \leftarrow \emptyset$
+        \item Procesa $(0,0)$: $V_3[0] = \perp \Rightarrow V_3[0] = 0$, $New_3 = \{(0,0)\}$
+        \item $V_3 = [0, \perp, \perp, 3]$, $New_3 = \{(0,0)\}$
+    \end{itemize}
+    
+    \item $p_1$ y $p_2$: no reciben mensajes (estados sin cambios)
+\end{itemize}
+
+\textbf{Estados después de ronda 1:}
+\begin{itemize}
+    \item $p_0$: $V_0 = [0, \perp, \perp, 3]$, $New_0 = \{(3,3)\}$
+    \item $p_1$: $V_1 = [\perp, 1, \perp, \perp]$, $New_1 = \{(1,1)\}$
+    \item $p_2$: $V_2 = [\perp, \perp, 2, \perp]$, $New_2 = \{(2,2)\}$
+    \item $p_3$: $V_3 = [0, \perp, \perp, 3]$, $New_3 = \{(0,0)\}$
+\end{itemize}
+
+\subsection*{Ronda 2}
+
+\textbf{Envío de mensajes:}
+\begin{itemize}
+    \item $p_0$ envía $New_0 = \{(3,3)\}$ a $p_1, p_2, p_3$ (solo $p_3$ recibe)
+    \item $p_3$ envía $New_3 = \{(0,0)\}$ a $p_0, p_1, p_2$ (solo $p_0$ recibe)
+    \item $p_1$ y $p_2$ no envían mensajes
+\end{itemize}
+
+\textbf{Recepción y actualización:}
+
+\begin{itemize}
+    \item $p_0$:
+    \begin{itemize}
+        \item $rec\_from[1] = \emptyset$, $rec\_from[2] = \emptyset$, $rec\_from[3] = \{(0,0)\}$
+        \item $New_0 \leftarrow \emptyset$
+        \item Procesa $(0,0)$: $V_0[0] = 0$ (ya no es $\perp$) $\Rightarrow$ no actualiza
+        \item $V_0 = [0, \perp, \perp, 3]$, $New_0 = \emptyset$
+    \end{itemize}
+    
+    \item $p_3$:
+    \begin{itemize}
+        \item $rec\_from[0] = \{(3,3)\}$, $rec\_from[1] = \emptyset$, $rec\_from[2] = \emptyset$
+        \item $New_3 \leftarrow \emptyset$
+        \item Procesa $(3,3)$: $V_3[3] = 3$ (ya no es $\perp$) $\Rightarrow$ no actualiza
+        \item $V_3 = [0, \perp, \perp, 3]$, $New_3 = \emptyset$
+    \end{itemize}
+    
+    \item $p_1$ y $p_2$: no reciben mensajes
+\end{itemize}
+
+\textbf{Estados después de ronda 2:}
+\begin{itemize}
+    \item $p_0$: $V_0 = [0, \perp, \perp, 3]$, $New_0 = \emptyset$
+    \item $p_1$: $V_1 = [\perp, 1, \perp, \perp]$, $New_1 = \{(1,1)\}$
+    \item $p_2$: $V_2 = [\perp, \perp, 2, \perp]$, $New_2 = \{(2,2)\}$
+    \item $p_3$: $V_3 = [0, \perp, \perp, 3]$, $New_3 = \emptyset$
+\end{itemize}
+
+\subsection*{Ronda 3}
+
+\textbf{Envío de mensajes:}
+\begin{itemize}
+    \item $p_0$: $New_0 = \emptyset$ $\Rightarrow$ no envía mensajes
+    \item $p_3$: $New_3 = \emptyset$ $\Rightarrow$ no envía mensajes
+    \item $p_1$ y $p_2$: no envían mensajes
+\end{itemize}
+
+\textbf{Recepción y actualización:}
+\begin{itemize}
+    \item Todos los procesos tienen $rec\_from[j] = \emptyset$ para todo $j$
+    \item No hay actualizaciones en $V_i$ o $New_i$
+\end{itemize}
+
+\textbf{Estados después de ronda 3:}
+\begin{itemize}
+    \item $p_0$: $V_0 = [0, \perp, \perp, 3]$, $New_0 = \emptyset$
+    \item $p_1$: $V_1 = [\perp, 1, \perp, \perp]$, $New_1 = \{(1,1)\}$
+    \item $p_2$: $V_2 = [\perp, \perp, 2, \perp]$, $New_2 = \{(2,2)\}$
+    \item $p_3$: $V_3 = [0, \perp, \perp, 3]$, $New_3 = \emptyset$
+\end{itemize}
+
+\subsection*{Decisión Final}
+
+\begin{itemize}
+    \item $p_0$: primer valor no $\perp$ de $V_0 = [0, \perp, \perp, 3]$ $\Rightarrow v = 0$ $\Rightarrow$ \textbf{decide 0}
+    \item $p_3$: primer valor no $\perp$ de $V_3 = [0, \perp, \perp, 3]$ $\Rightarrow v = 0$ $\Rightarrow$ \textbf{decide 0}
+    \item $p_1$ y $p_2$: fallidos, no deciden
+\end{itemize}
+
+\section*{EJERCICIO 4}
+
+ \noindent En una ronda, porque después de un solo intercambio de mensajes confiable, todos los procesos poseen la misma información (las entradas de todos). Dado que todos los procesos se comunicaron con todos y no se perdió ningún mensaje entonces todos los procesos no fallidos tienen el mismo conjunto V.
+
+\section*{EJERCICIO 5}
+\begin{teorema}[Imposibilidad de consenso con procesos bizantinos]
+En un sistema con \(n\) procesos y a lo más \(f\) procesos bizantinos, no existe algoritmo determinista que resuelva el problema del consenso si
+\[
+n \le 3f.
+\]
+\end{teorema}
+
+\begin{proof}
+Supongamos, por contradicción, que existe un algoritmo \(A\) que logra consenso con \(n \le 3f\).
+
+Podemos dividir los procesos en tres grupos disjuntos \(P_1, P_2, P_3\), cada uno con a lo sumo \(f\) procesos.  
+Podemos tener las siguientes configuraciones iniciales en los vectores:
+
+\[
+S: P_1 \text{ tiene valor } 0,\quad P_2,P_3 \text{ tienen } 1.
+\]
+\[
+T: P_2 \text{ tiene valor } 0,\quad P_1,P_3 \text{ tienen } 1.
+\]
+
+Ahora con lo anterior podemos formas las siguientes ejecuciones: 
+
+1. En \(\mathcal{E}_1\), los procesos de \(P_3\) son bizantinos y tienen comportamiento coherente con \(S\).  
+2. En \(\mathcal{E}_2\), los procesos de \(P_1\) son bizantinos y tienen
+comportamiento coherente con \(T\).
+
+Los procesos correctos de \(P_2\) reciben exactamente los mismos mensajes en \(\mathcal{E}_1\) y \(\mathcal{E}_2\); por lo tanto, no pueden distinguir entre ambas ejecuciones y deben decidir el mismo valor.
+
+Sin embargo, por la propiedad de \emph{validez}, en una ejecución sin fallos con configuración \(S\), los procesos correctos deberían decidir 0, mientras que con \(T\) deberían decidir 1.  
+Esto contradice la \emph{acuerdo} del consenso, ya que los procesos de \(P_2\) no pueden decidir ambos valores a la vez.
+
+Por lo tanto, no puede existir un algoritmo de consenso si \(n \le 3f.\)
+\end{proof}
+
+
+\section*{EJERCICIO 6}
+
+\begin{proposicion}
+En el modelo síncrono con fallos bizantinos, el problema del consenso y el problema del consenso de fuente única (del general) son equivalentes: una solución para uno puede transformarse en una solución para el otro.
+\end{proposicion}
+
+\begin{proof}
+\textbf{(1) De consenso a general.}  
+Tenemos que el general envía su valor a todos en la primera ronda.  
+Cada teniente usa el valor recibido (o $\bot$ si no recibe nada) como entrada al algoritmo de consenso.  
+Por su terminación y acuerdo del consenso, todos deciden el mismo valor.  
+Si el general es correcto, todos reciben su valor y la validez se cumple.
+
+\medskip
+\textbf{(2) De general a consenso.}  
+Se ejecutan \(n\) instancias del algoritmo de fuente única, una por cada proceso actuando como general con su valor inicial.  
+Cada proceso obtiene un vector de valores y aplica una regla determinista (por ejemplo, la primera entrada no nula).  
+Como cada instancia garantiza acuerdo, todos los procesos obtienen el mismo vector y, por tanto, la misma decisión.  
+Si todos los valores iniciales son iguales, la validez también se cumple.
+
+\medskip
+Por tanto, los problemas son reducibles entre sí.
+\end{proof}
+
+\section*{EJERCICIO 7}
+\textbf{Validez.}  
+Inicialmente, $V = \{x_i\}$ tiene solamente el valor de entrada del proceso.  
+En cada ronda, los procesos sólo envían y reciben conjuntos formados por valores iniciales, por lo que $V$ será siempre un subconjunto de $\{x_0, x_1, \ldots, x_{n-1}\}$.  
+La decisión del valor $\min(V)$ pertenece por tanto al conjunto de entradas que se tienen al inicio.   
+\[
+\Rightarrow \text{La propiedad de validez se cumple.}
+\]
+
+\textbf{k-Acuerdo.}  
+En cada ronda se intercambia información incluso si hay $f$ fallas.  
+Debido a que se ejecutan $f/k + 1$ rondas, cada proceso no fallido alcanza un conocimiento consistente con todos salvo a lo más $f$ procesos.  
+Esto implica que los conjuntos $V$ de los procesos no fallidos pueden diferir en a lo más $k$ valores distintos.  
+\[
+\Rightarrow \text{La propiedad de k-acuerdo se cumple.}
+\]
+
+\textbf{Terminación.}  
+Todos los procesos no fallidos realizan un número finito de rondas y finalmente deciden un valor.  
+\[
+\Rightarrow \text{La propiedad de terminación se cumple.}
+\]
+
+\textbf{Conclusión.}  
+El algoritmo garantiza las tres propiedades anteriores por lo tanto, el Algoritmo resuelve el problema del consenso \textit{k-set} en presencia de fallas por detención para cualquier $f < n$.
+
+\section*{EJERCICIO 8}
+
+Sea $n$ el número de procesos, $f$ el número máximo de fallos bizantinos y $m$ el tamaño del conjunto de entradas posibles.  
+Queremos demostrar que, para cumplir la \emph{validez fuerte} (toda decisión no defectuosa debe ser igual a alguna entrada no defectuosa), se requiere:
+\[
+n > \max(3,m)\cdot f.
+\]
+
+\textbf{Demostración por contradicción:}  
+Supongamos que $n \le \max(3,m)\cdot f$. El adversario puede entonces dividir a los procesos en grupos de tamaño a lo sumo $f$, haciendo que cada grupo de procesos correctos no pueda distinguir entre distintas ejecuciones simuladas por los procesos bizantinos.
+
+\begin{itemize}
+  \item Si $m \le 3$, basta con tres grupos de tamaño $\le f$. Se obtienen tres ejecuciones indistinguibles donde distintos grupos deciden valores distintos, rompiendo el acuerdo. Por tanto, $n > 3f$.
+  \item Si $m > 3$, se forman $m$ grupos, cada uno con una entrada distinta. Los procesos bizantinos pueden simular que todos los demás tienen la misma entrada, de modo que cada grupo decide un valor diferente, lo que rompe el acuerdo. Por tanto, $n > mf$.
+\end{itemize}
+
+En ambos casos, para mantener acuerdo y validez fuerte se requiere:
+\[
+\boxed{n > \max(3,m)\cdot f.}
+\]
+
+
+\end{document}
