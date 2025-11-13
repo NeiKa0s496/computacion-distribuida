@@ -1,0 +1,341 @@
+\documentclass[12pt]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\documentclass{scrartcl}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}   % imágenes
+\usepackage{geometry}   % márgenes
+\usepackage{xcolor}     % colores
+\usepackage{mdframed}   % recuadros
+\usepackage{enumitem}   % listas con control
+\usepackage{kantlipsum}   % alineación de texto
+\geometry{margin=1.5cm}
+\newtheorem{theorem}{Teorema}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+
+\algnewcommand{\When}[1]{\State \textbf{when} #1 \textbf{do}}
+\algnewcommand{\ForEach}[1]{\State \textbf{for each} #1 \textbf{do}}
+\renewcommand{\qed}{\hfill\blacksquare}
+\algnewcommand{\EndFor}{\State}
+\newcommand{\qedwhite}{\hfill \ensuremath{\Box}}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=8pt,
+  frame=single,
+  framesep=6pt,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  escapeinside={(*@}{@*)},
+  literate={<-}{{$\leftarrow$}}1
+}
+
+% Recuadro azul para ejercicios
+\newmdenv[
+  backgroundcolor=blue!10,
+  linecolor=blue!50!black,
+  linewidth=1pt,
+  topline=false, bottomline=false, rightline=false,
+  innertopmargin=6pt, innerbottommargin=6pt, innerleftmargin=6pt
+]{ejercicio}
+
+\begin{document}
+% ---------------- ENCABEZADO CON LOGOS ----------------
+\begin{center}
+    \hrule
+    \vspace{0.3cm}
+    \includegraphics[width=0.15\textwidth]{img/escudo-unam.png}
+    \hfill
+    \includegraphics[width=0.15\textwidth]{img/escudo-ciencias.png}
+    
+    \vspace{-3cm}
+    \begin{minipage}{0.7\textwidth}
+        \centering
+        {\medium \textbf{UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO}}\\[0.2cm]
+        {\medium \textbf{FACULTAD DE CIENCIAS}}\\[0.2cm]
+        {\medium \textbf{COMPUTACIÓN DISTRIBUIDA}}\\[0.2cm]
+        {\medium \textbf{TAREA 4b}}\\
+    \end{minipage}
+    \vspace{0.3cm}
+\end{center}
+
+\vspace{0.8cm}
+% ---------------- DATOS ----------------
+
+\mbox{}\hfill 2026-1
+\newline
+\hrule
+% ---------------- EJERCICIOS ----------------
+\begin{ejercicio}
+\textbf{EJERCICIO 9.} 
+Demuestra que una solución al problema del ataque coordinado (determinista) para cualquier gráfica conexa no trivial implica una solución para la gráfica simple formada por dos procesos conectados por una arista. (Por lo tanto, este problema no tiene solución en ninguna gráfica no trivial).
+\end{ejercicio}
+
+\begin{theorem}
+Sea \( G \) la gráfica formada por los nodos \( n_1 \) y \( n_2 \) conectados por una única arista. Entonces no existe ningún algoritmo que resuelva el problema del ataque coordinado en \( G \).
+\end{theorem}
+
+\begin{proof}
+Supongamos, por contradicción, que existe un algoritmo determinista \( A \) que resuelve el problema del ataque coordinado para alguna gráfica conexa no trivial arbitraria \( G' \) con al menos dos nodos. \( G' \) es conexa y no trivial, contiene al menos una arista y dos procesos activos, los demás se encuentran inactivos, además contiene una arista \( (p,q) \).\\
+Consideramos una ejecución en la que:\\
+\( p \) y \( q \) tienen entradas distintas, tq. \( p \) con 1, \( q \) con 0, Todos los demás procesos tienen entrada 0, los mensajes entre \( p \) y \( q \) pueden perderse, como en el modelo original y los demás procesos no aportan información útil al acuerdo.
+
+\noindent Pero si el algoritmo \( A \) resuelve el problema en \( G' \), entonces en particular debe coordinar correctamente la decisión entre \( p \) y \( q \), incluso si los mensajes entre ellos se pierden. Esto implicaría un algoritmo que resuelve el problema en la gráfica compuesta únicamente de \( p \) y \( q \) conectados por una arista, sería una solución en la gráfica simple de dos procesos.
+
+\noindent Contradice el Teorema 2, que dice que no existe solución para la gráfica de dos procesos.
+\end{proof}
+
+
+\begin{ejercicio}
+\textbf{EJERCICIO 10.} 
+Consideremos la siguiente variante del problema del ataque coordinado (determinista). Supongamos que la red es una gráfica completa de $n > 2$ participantes. Los requisitos de terminación y validez son los de la siguiente imagen. Sin embargo, el requisito de acuerdo se debilita para decir: ``Si cualquier proceso decide 1, entonces hay al menos dos que deciden 1''. (Es decir, queremos descartar el caso en que un general ataque solo, pero permitir que dos o más generales ataquen juntos). ¿Este problema tiene solución o no? Demuéstralo.\\
+
+\noindent \textbf{Validity:}
+\begin{enumerate}
+    \item If all processes start with 0, then 0 is the only possible decision value.
+    \item If all processes start with 1 and all messages are delivered, then 1 is the only possible decision value.
+\end{enumerate}
+
+\noindent \textbf{Termination:} All processes eventually decide.
+
+The agreement and termination requirements are the natural ones. The validity requirement is just one possibility—there are several useful alternatives. Validity conditions, in general, express the notion that the value decided upon should be ``reasonable''; for instance, in this case, the trivial protocol that always decides 0 is ruled out by part 2 of the validity requirement. The particular validity condition we have stated above is quite weak: for example, if even one process starts with 1, the algorithm is allowed to decide 1, and if all processes start with 1 and even one message is lost, the algorithm is allowed to decide 0. The weak formulation is appropriate because our main focus in this chapter is on impossibility results. It turns out that even this weak version of the problem is impossible to solve in any graph with two or more nodes.
+\end{ejercicio}
+
+\noindent De la bibliografía recomendada en el curso encontré más información en el libro de Nancy Lynch: Dsitributed Algorithms.
+
+El acuerdo aun debilitado sigue exigiendo coordinación para el 1, y la pérdida de mensajes hace imposible que podamos asegurar que al menos dos tengan suficiente información para decidir 1 de forma consistente, sin caer en situaciones donde uno decida 1 y otro 0 violando la condición. Por lo tanto no existe solución.
+ 
+\begin{proof}
+Supongamos $n = 3$ y existe algoritmo $A$ que cumple terminación, validez y acuerdo debilitado.
+
+Fijemos el proceso $p_3$ para que siempre tenga entrada $0$ y nunca falle (mensajes siempre entregados a y desde él). Consideremos solo ejecuciones donde $p_3$ recibe todos los mensajes de $p_1$ y $p_2$ y viceversa.
+
+Ent. si $p_1$ y $p_2$ son los únicos que pueden tener entrada $1$, el acuerdo debilitado dice: si $p_1$ decide $1$, entonces al menos otro decide $1$. Ese otro podría ser $p_2$ o $p_3$. Pero $p_3$ debe decidir $0$.
+
+Podemos forzar una ejecución donde $p_1$ y $p_2$ tienen entrada $1$, pero por pérdida de mensajes entre ellos, $p_1$ ve a $p_3$ con $0$ y a $p_2$ no lo oye, entonces $p_1$ debe decidir $0$ (si decidiera $1$, violaría acuerdo debilitado porque $p_3$ decide $0$ y $p_2$ decide $0$). Pero en otra ejecución indistinguible para $p_1$, $p_2$ sí le llega el mensaje y ambos deciden $1$. Que es una contradicción.
+\end{proof}
+    
+\begin{ejercicio}
+\textbf{EJERCICIO 11.} 
+Demuestra que cualquier algoritmo que resuelva el problema del acuerdo Bizantino (Byzantine agreement problem) también resuelve el problema del acuerdo de parada (stopping agreement problem), si la condición de validez para parar fallas se modifica para requerir sólo que los procesos no defectuosos estén de acuerdo.
+\end{ejercicio}
+
+\begin{proof}
+    Supongamos por contradicción que existe un algoritmo $A$ que resuelve el problema del ataque coordinado en alguna gráfica conexa no trivial $G$.
+
+Como $G$ es conexa y no trivial, contiene al menos una arista $(p,q)$. Consideremos una ejecución de $A$ en $G$ donde:\\
+- Solo $p$ y $q$ tienen entradas relevantes (digamos 1 y 0 respectivamente)
+- Todos los demás procesos tienen entrada 0\\
+- Los mensajes entre $p$ y $q$ pueden perderse (como en el modelo original)\\
+- Los demás procesos no alteran la decisión final\\
+
+La ejecución de $A$ restringida solo a los procesos $p$ y $q$ y la arista que los conecta sería funcionalmente equivalente a una solución del problema en la gráfica de dos nodos.
+
+Sin embargo, según el Teorema 2 de nuestras notas de concenso: 
+\begin{theorem}
+"Sea $G$ la gráfica formada por los nodos $n_1$ y $n_2$ conectados por una única arista. Entonces no existe ningún algoritmo que resuelva el problema del ataque coordinado en $G$."    
+\end{theorem}
+
+Esta contradicción demuestra que no puede existir una solución determinista para ninguna gráfica conexa no trivial, ya que implicaría una solución para la gráfica de dos nodos, que es imposible.
+\end{proof}
+
+\begin{ejercicio}
+\textbf{EJERCICIO 12.} 
+Demuestra que cualquier algoritmo que resuelve el problema de acuerdo Bizantino (Byzantine agreement problem), y en el que todos los procesos no defectuosos siempre deciden en la misma ronda, también resuelve el problema de acuerdo de parada (stopping agreement problem).
+\end{ejercicio}
+
+\begin{theorem}
+Cualquier algoritmo que resuelve el acuerdo bizantino para $t$ fallos también resuelve el acuerdo con fallos de caída para $t$ fallos bajo la condición de validez modificada que solo exige que los procesos no fallidos acuerden un valor.
+\end{theorem}
+
+\begin{proof}
+Sea $\mathcal{A}$ un algoritmo que resuelve el acuerdo bizantino para a lo sumo $t$ fallos bizantinos. Consideramos una ejecución de $\mathcal{A}$ con a lo sumo $t$ procesos con fallos de caída. Como un fallo de caída es un caso particular de fallo bizantino (un proceso caído equivale a un proceso bizantino que deja de enviar mensajes), dicha ejecución es válida en el modelo bizantino. Por la propiedad de \textit{acuerdo} del acuerdo bizantino, todos los procesos no fallidos deciden el mismo valor $v$. Por \textit{terminación}, todos los procesos no fallidos deciden en tiempo finito. La condición de validez modificada para el acuerdo con fallos de caída exige únicamente que los procesos no fallidos acuerden un valor, lo cual coincide exactamente con la propiedad de \textit{acuerdo} ya satisfecha por $\mathcal{A}$. Por lo tanto, $\mathcal{A}$ cumple acuerdo, terminación y la validez modificada para el problema de acuerdo con fallos de caída.
+\end{proof}
+
+\begin{ejercicio}
+\textbf{EJERCICIO 13.} 
+Consideremos el siguiente algoritmo simple para el acuerdo con fallos de parada, para un dominio de valores $V$. Cada proceso mantiene una variable \texttt{min-val}, originalmente fijada a su propio valor inicial. En cada una de $f+1$ rondas, todos los procesos transmiten sus valores mínimos y, a continuación, cada uno restablece su valor mínimo al mínimo de su valor mínimo anterior y de todos los valores que recibe en los mensajes. Al final, el valor de decisión es \texttt{min-val}. Proporcione el código de este algoritmo y demuestre (directamente o mediante una simulación) que funciona correctamente.
+\end{ejercicio}
+\begin{algorithm}[H]
+\caption{Algoritmo de Consenso con Fallos de Parada}
+\label{alg:consensus}
+\begin{algorithmic}[1]
+\Procedure{Consenso}{$x_i, f$} \Comment{$x_i$ es el valor de entrada del proceso $p_i$, $f$ es el número máximo de fallos}
+    \State $V \gets \{x_i\}$ \Comment{Conjunto de valores conocidos}
+    \For{$k = 1$ \textbf{to} $f+1$} \Comment{$f+1$ rondas}
+        \State Envia $\{v \in V: p_i \text{ no ha enviado } v \text{ antes}\}$ a todos los procesos
+        \State Recibe $S_j$ de los procesos $p_j$ que respondieron
+        \State $V \gets V \cup \bigcup_j S_j$ \Comment{Actualiza conjunto con valores recibidos}
+    \EndFor
+    \State $\text{decision} \gets \min(V)$ \Comment{Decide el valor mínimo}
+    \State \textbf{return} $\text{decisión}$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\begin{proof}
+Por inducción:
+
+\item \textbf{Caso base (ronda 1):} Cada proceso envía su valor inicial. Como hay a lo más $f$ procesos fallidos, al menos $n-(f+1)$ procesos no fallidos recibirán el mismo conjunto de valores. La unión de estos conjuntos contendrá todos los valores iniciales de los procesos no fallidos.
+    
+    \item \textbf{H.I:} Supongamos que después de $k$ rondas, todos los procesos no fallidos tienen el mismo conjunto de valores.
+    
+    \item \textbf{Paso inductivo (ronda $k+1$):} Cada proceso envía su valor mínimo actual. Cada proceso no fallido recibirá al menos $n-(f+1)$ de estos valores, ya que hay a lo más $f$ procesos fallidos. Por lo tanto, la unión de estos valores contendrá todos los valores actuales de los procesos no fallidos. Así, tras la ronda $k+1$, todos los procesos no fallidos tendrán el mismo valor mínimo.
+
+Después de $f+1$ rondas, todos los procesos no fallidos tendrán el mismo valor mínimo. Si hay al menos $f+1$ procesos no fallidos, entonces ejecutarán la decisión y acordarán el valor mínimo. Si hay menos de $f+1$ procesos no fallidos, entonces todos tendrán el mismo valor en la última ronda.
+\end{proof}
+
+\begin{ejercicio}
+\textbf{EJERCICIO 14.} 
+Diseña un algoritmo para detener el acuerdo que satisfaga la siguiente propiedad de detención temprana: Si en una ejecución del algoritmo sólo $f' < f$ procesos fallan, entonces el tiempo hasta que todos los procesos no fallidos deciden es a lo más $k \cdot f'$, para alguna constante $k$. Haz lo mismo para el acuerdo bizantino.
+\end{ejercicio}
+
+\section{Algoritmo de consenso con detención temprana}
+
+Algoritmo para el proceso $p_i$
+\begin{itemize}
+    \item $V_i \leftarrow \{x_i\}$ (conjunto de valores conocidos, inicialmente solo su valor de entrada)
+    \item $r \leftarrow 0$ (contador de rondas)
+\end{itemize}
+
+Mientras no haya decidido:
+\begin{itemize}
+    \item $r \leftarrow r + 1$
+    \item Enviar $V_i$ a todos los demás procesos
+   \item Recibir conjuntos $V_j$ de otros procesos
+   \item $V_i \leftarrow V_i \cup (\text{todos los } V_j \text{ recibidos})$
+   \itme Para cada valor $v \in V_i$, se cuentan cuántos procesos han enviado $v$ en esta ronda incluyendo a sí mismo
+   \item Si existe algún valor $v$ tal que el conteo $\geq n - r + 1$:\\
+      - Decide \\
+      - Termina
+\end{itemize}
+
+\section{Para el acuerdo bizantino}
+
+\begin{itemize}
+    \item $V_i \leftarrow \{x_i\}$ (conjunto de valores conocidos)
+    \item $k \leftarrow 0$ (contador)
+\end{itemize}
+
+Para $k = 1$ hasta $f + 1$:
+
+\begin{itemize}
+    \item Envia $V_i$ a todos los demás procesos
+    \item Recibe conjuntos $V_j$ de otros procesos
+    \item $V_i \leftarrow V_i \cup (\bigcup \text{todos los } V_j \text{ recibidos})$
+2.
+    \item Para cada valor $v \in V_i$, determina si hay mayoría (más de $n/2$ procesos)
+    \item Enviar "($v$)" si $v$ tiene mayoría, o "?" si no
+3.
+    \item El líder de la fase $p_k$ envía su valor mayoritario $v_k$
+    \item Recibe valores de otros procesos
+    \item Verificación de terminación:
+    \item Si existe algún valor $v$ tal que el conteo de "ratify($v$)" $\geq n - 2k + 1$:
+    \item Decide $v$
+    \item Termina
+\end{itemize}
+
+\begin{ejercicio}
+\textbf{EJERCICIO 15.} 
+El siguiente algoritmo describe un algoritmo para el acuerdo asíncrono con $f$ fallas de colisión (\emph{crash failures}) en una red de paso de mensajes totalmente conectada. La idea es obtener valores de $n - f$ procesos en cada una de las $m$ rondas, y luego decidir sobre el valor más pequeño obtenido. El valor de $m$ es un parámetro del algoritmo y puede depender de $n$ y $f$. Como es habitual, cuando se esperan mensajes de la ronda $i$, los mensajes entregados con otros números de ronda se almacenarán internamente y se procesarán cuando el algoritmo esté preparado para ellos.
+
+\textbf{OBSERVACIÓN.} Cuando un proceso envía un mensaje a todos los procesos, se incluye a sí mismo.
+
+Demuestra que, para cualquier $n$ y $0 < f < n/2$, existe un valor de $m$ tal que el algoritmo satisface el acuerdo, la terminación y la validez; o muestra cómo construir una ejecución para cualquier $n$, $0 < f < n/2$ y $m$ que haga que el algoritmo falle al menos uno de estos requisitos.
+
+\begin{algorithm}[H]
+\caption{Algoritmo candidato para el acuerdo asíncrono}
+\begin{algorithmic}[1]
+\State \texttt{preference} $=$ input
+\For{$i = 1$ to $m$}
+    \State send($i$, \texttt{preference}) to all processes
+    \State wait to receive($i$, $v$) from $n - f$ processes
+    \For{each ($i$, $v$) received} 
+        \State \texttt{preference} $= \min($\texttt{preference}, $v)$
+\State \hspace*{-3em}decide(\texttt{preference}) % Ajusta este valor según necesites
+\end{algorithmic}
+\end{algorithm}
+\end{ejercicio}
+\begin{proof}
+Sea el algoritmo descrito para el acuerdo asíncrono con $f$ fallas n, donde $0 < f < \frac{n}{2}$. \\
+Pd. Ningún valor de $m$ satisface a todos: \emph{acuerdo}, \emph{terminación} y \emph{validez}.
+
+Supongamos que tenemos \(n = 5\), \(f = 2\) (cumple \(0 < f < n/2\)) y \(m = 3\) (cualquier \(m\)).\\
+Con \(A\) (3 procesos): input = 0 y \(B\) (2 procesos): input = 1
+
+Ronda 1:
+- Grupo \(A\) se comunica y actualiza  a 0.
+- Grupo \(B\) se comunica y actualiza a 1.
+- Los mensajes entre \(A\) y \(B\) se retrasan.
+
+Ronda 2:
+- Igual que la fase 1: cada grupo mantiene su preferencia.
+
+Ent. cada grupo decide su valor local (0 o 1).
+
+Se viola el acuerdo: \\
+- Grupo \(A\) decide 0.\\  
+- Grupo \(B\) decide 1.
+
+ En sistemas asíncronos no es posible distinguir entre un proceso lento y uno fallado, y por lo tanto no se puede garantizar acuerdo, terminación y validez simultáneamente en presencia de fallas. 
+ \end{proof}
+ En la bibliografía del curso se nos da el libro de Attiya, Dsitributed Computing que cita:
+     
+\subparagraph{Sección 5.3: IMPOSSIBILITY IN ASYNCHRONOUS SYSTEMS (páginas 18–29) y habla del FLP (Fischer, Lynch, Paterson): No existe un algoritmo determinista que resuelva consenso en un sistema asíncrono aunque solo un proceso falle.}
+
+\begin{ejercicio}
+\textbf{EJERCICIO 16.} 
+Demuestra que el problema de acuerdo aproximado puede resolverse en una gráfica $G$, tolerando $f$ fallos bizantinos, si y sólo si se cumplen las dos condiciones siguientes:
+\begin{itemize}
+    \item $n > 3f$
+    \item $\mathrm{conn}(G) > 2f$
+\end{itemize}
+\end{ejercicio}
+
+
+\noindent Supongamos que el acuerdo aproximado es posible y mostraremos que ambas desigualdades deben sostenerse.
+
+\textbf{(i) \(n>3f\).} Si \(n\le 3f\) entonces existen al menos \(2\) particiones no triviales que el adversario puede explotar para forzar algo no valido o un acuerdo aproximado.  
+Más concretamente, considere una entrada binaria \(\{0,1\}\). El adversario elige hasta \(f\) procesos que actúan bizantinos y hace que los honestos queden divididos en dos conjuntos \(A,B\) con entradas puramente \(0\) y \(1\) respectivamente, y simula mensajes a \(A\) como si los de \(B\) fueran todos \(0\) y a \(B\) como si los de \(A\) fueran todos \(1\). Si \(n\le 3f\) puede construirse tal escenario donde dos honestos deben decidir valores separados por al menos \(1\), rompiendo el acuerdo aproximado. (Este argumento es análogo al estándar que da la cota \(n>3f\) para problemas de consenso con Byzantinos.)
+
+\textbf{(ii) \(\kappa(G)>2f\).} Si \(\kappa(G)\le 2f\) existe un conjunto de vértices \(S\) con \(|S|\le 2f\) que separa \(G\) en al menos dos componentes no vacías \(A\) y \(B\). El adversario puede colocar hasta \(f\) Byzantinos dentro de \(S\) (y si \(|S|>f\) simular comportamientos distintos hacia \(A\) y \(B\) desde los vértices restantes de \(S\)). Entonces los honestos en \(A\) no pueden distinguir entre dos ejecuciones compatibles con entradas globales distintas (por ejemplo, todos los de \(A\) con \(0\) y todos los de \(B\) con \(1\)), y simétricamente para \(B\). Con esto se puede forzar que honestos en \(A\) y en \(B\) terminen con valores separados por una cantidad no arbitrariamente pequeña, violando el acuerdo aproximado. Así, es necesario \(\kappa(G)>2f\).
+
+\paragraph{(Suficiencia.)}
+Supongamos \(n>3f\) y \(\kappa(G)>2f\). Probaremos que existe un algoritmo tolerante a \(f\) Byzantinos que resuelve el acuerdo aproximado.
+
+\textbf{Lema (Menger aplicado).} Si \(\kappa(G)>2f\) entonces entre cualquier par de vértices honestos existen al menos \(2f+1\) caminos por vértices disjuntos.
+
+\textbf{Construcción (esquema de algoritmo).} Hacemos comunicación síncrona por rondas (se puede implementar con flooding y numeración de rondas en modelo asincrónico con buzones). En cada ronda cada proceso:
+\begin{enumerate}
+  \item difunde su valor actual a toda la red (flooding por todas las aristas, incluyendo su id y número de ronda);
+  \item para cada origen \(p\) recoge, mediante rutas disjuntas, un conjunto de mensajes que representan el valor reportado por \(p\) (usando las \(2f+1\) rutas garantizadas por la conectividad);
+  \item para cada origen \(p\) aplica un \emph{filtrado} (trim): descarta los \(f\) valores mayores y los \(f\) valores menores de los que haya recibido sobre \(p\), y se queda con la mediana/valor central resultante \(v_p\);
+  \item actualiza su propio valor a una media recortada (por ejemplo, promedio de los \(v_p\) o any convex combination) que mantiene la validez (se mantiene dentro del envolvente convexo de valores honestos);
+  \item repetir hasta alcanzar la convergencia deseada \(\varepsilon\).
+\end{enumerate}
+
+\textbf{Correctitud (idea).}
+\begin{itemize}
+  \item \emph{Terminación:} Cada flooding termina en tiempo finito y los pasos son locales por ronda, luego el procedimiento por rondas termina cada ronda; la convergencia al margen \(\varepsilon\) requiere un número finito de rondas.
+  \item \emph{Validez:} En cada ronda, para cada origen \(p\), al menos \(f+1\) de las \(2f+1\) rutas están libres de Bizantinos (porque hay a lo sumo \(f\) Bizantinos total). Por tanto, entre los \(2f+1\) testimonios sobre \(p\) la mayoría refleja el valor real de \(p\) o valores honestos consistentes; tras descartar \(f\) extremos por cada lado el valor \(v_p\) proviene del intervalo convexo de valores honestos. Por tanto la actualización permanece dentro del envolvente convexo de valores honestos, garantizando validez round a round.
+  \item \emph{Acuerdo aproximado:} El recorte de \(f\) extremos en cada lado elimina la influencia arbitraria de los Byzantinos; la componente honesta tiene suficiente presencia (\(n- f > 2f\) por \(n>3f\)) para arrastrar la media recortada hacia un intervalo común. El proceso de iterar medias recortadas es contractivo: el diámetro del conjunto de valores honestos decrece a cada ronda por un factor \(<1\), por lo que tras un número finito de rondas el diámetro es \(<\varepsilon\), dando el acuerdo aproximado deseado.
+\end{itemize}
+
+Con esto, bajo \(\kappa(G)>2f\) y \(n>3f\) existe un algoritmo (flooding + trimmed mean) que garantiza terminación, validez y acuerdo aproximado frente a \(f\) Byzantinos.
+
+\paragraph{Conclusión.} Las condiciones \(n>3f\) y \(\kappa(G)>2f\) son necesarias y suficientes para resolver el acuerdo aproximado en \(G\) tolerando \(f\) fallos bizantinos. \(\square\)
+
+
+
+\end{document}
