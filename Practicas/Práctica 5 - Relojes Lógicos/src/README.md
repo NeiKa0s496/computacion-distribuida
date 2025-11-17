@@ -29,8 +29,7 @@ recepción de mensajes.​
 Como dichos valores estarán acotados, el sistema no será completamente
 asíncrono.
 Para el reloj de Lamport, se utilizará como base el algoritmo de Broadcast.​
-Deberán adaptar el archivo entregado en esa práctica para que cada nodo:
-●​ opere de forma asíncrona, y​ cuente con una variable de reloj.
+Deberán adaptar el archivo entregado en esa práctica para que cada nodo opere de forma asíncrona, y​ cuente con una variable de reloj.
 Para el reloj vectorial, se tomará como base el algoritmo DFS.​
 El procedimiento será el mismo que con Lamport, pero en este caso el reloj será un
 arreglo de enteros.​
@@ -77,8 +76,8 @@ src
 │   └── Canal.py
 ├── Nodo.py                  # Clase base para todos los nodos
 ├── NodoBroadcast.py         # Implementación del algoritmo Broadcast
-├── NodoDFS.py               #Implementaciónd el algoritmo DFS
-├── NodoBFS.py               #Implementación del algortimo BFS
+├── NodoDFS.py               # Implementaciónd el algoritmo DFS
+├── NodoBFS.py               # Implementación del algortimo BFS
 └── test.py
 ```
 ## **4. Implementación**
@@ -115,7 +114,7 @@ src
   - Establece su distancia en 0.
   - Envía un mensaje con `(id, distancia)` a todos sus vecinos.
 
-Los nodos receptores:
+Los nodos que reciben:
   - Si la distancia recibida + 1 es menor que su distancia actual:
     - Actualizan su distancia y padre.
     - Reenvían el mensaje a sus vecinos.
