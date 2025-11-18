@@ -1,8 +1,0 @@
-.vscode
-venv/
-__pycache__/
-.pytest_cache/
-Canales/__pycache__/
-Canales/__pycache__
-.vscode/
-venv
