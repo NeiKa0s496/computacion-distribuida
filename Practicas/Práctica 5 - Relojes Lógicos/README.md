@@ -6,8 +6,6 @@
 - Alan Alexis Martínez López
 <p>
 
-## Integrantes:
-
 <img src="https://static.wikia.nocookie.net/houkai-star-rail/images/a/a8/Profile_Picture_Silver_Wolf_-_Opening.png/revision/latest?cb=20241023022201" alt="sw" width="200" height="200" align="right" style="margin-left: 15px;">
 
 ## Tabla de Contenidos
