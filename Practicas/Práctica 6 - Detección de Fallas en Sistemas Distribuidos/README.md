@@ -1,11 +1,13 @@
 # Práctica 6 - Detección de Fallas en Sistemas Distribuidos
 
 ## Descripción de la práctica
-<img src="https://upload-os-bbs.hoyolab.com/upload/2024/06/20/329888290/6aa7d148cf742e3b8c4432ecc5fee482_2993125988332696065.jpg?x-oss-process=image%2Fresize%2Cs_1000%2Fauto-orient%2C0%2Finterlace%2C1%2Fformat%2Cwebp%2Fquality%2Cq_70" style="float: right; margin-left: 15px; width: 300px; height: 300px; object-fit: cover;" />
+
 
 Los detectores de fallas son una herramienta esencial en los sistemas distribuidos,
 ya que permiten mantener la integridad del sistema cuando uno o varios procesos
 dejan de responder.
+
+<img src="https://upload-os-bbs.hoyolab.com/upload/2024/06/20/329888290/6aa7d148cf742e3b8c4432ecc5fee482_2993125988332696065.jpg?x-oss-process=image%2Fresize%2Cs_1000%2Fauto-orient%2C0%2Finterlace%2C1%2Fformat%2Cwebp%2Fquality%2Cq_70" style="float: right; margin-left: 15px; width: 300px; height: 300px; object-fit: cover;" />
 
 En esta práctica implementarán un detector de fallas sencillo, basado en el siguiente
 esquema, cuyo propósito es identificar procesos que pueden haber fallado durante
