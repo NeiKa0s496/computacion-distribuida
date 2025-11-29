@@ -44,7 +44,7 @@ class NodoConsenso(Nodo):
         '''El algoritmo de consenso.'''
         # Aquí va su implementación
         
-        # Determinar los nodos que fallarán
+        # Determina los nodos que fallarán
         if self.id_nodo < f:
             self.fallare = True
             return
@@ -85,7 +85,7 @@ class NodoConsenso(Nodo):
                         # Mensaje del detector de fallas
                         tipo, id_emisor = mensaje
                         if tipo == "INQUIRY":
-                            # Responder si no es sospechoso
+                            # Si no es sospechoso
                             if self.id_nodo not in self.suspected:
                                 yield self.canal_salida.envia(("ECHO", self.id_nodo), [id_emisor])
                         elif tipo == "ECHO":
@@ -106,13 +106,13 @@ class NodoConsenso(Nodo):
             if valores_validos:
                 self.lider = min(valores_validos)
         
-        # Imprimir el conjunto suspected al finalizar
+        # Imprime el conjunto suspected al finalizar
         print(f"Nodo {self.id_nodo}: suspected = {self.suspected}, lider = {self.lider}")
 
     def detector_fallas(self, env, f):
         '''Implementación del detector de fallas.'''
         while True:
-            # Repete cada beta time units
+            # Repite cada beta time units
             for _ in range(self.beta):
                 # Envia INQUIRY a todos los vecinos no sospechosos
                 vecinos_no_sospechosos = [v for v in self.vecinos if v not in self.suspected]
