@@ -56,7 +56,7 @@ class NodoConsenso(Nodo):
 
         for ronda in range(n_rondas):
             """
-            Esto se cambiará para el detector de fallas
+            Esto lo cambiaré para el detector de fallas
             - Si el nodo falla en esta ronda o después, no participa
             """
             if self.id_nodo in self.suspected:
@@ -73,7 +73,7 @@ class NodoConsenso(Nodo):
             yield env.timeout(TICK)  # Esperar con TICK
             mensajes_ronda = []
             
-            # Recibir mensajes del canal de entrada
+            # Recibe mensajes
             while len(self.canal_entrada.items) > 0:
                     mensaje = yield self.canal_entrada.get()
                     if isinstance(mensaje, tuple) and len(mensaje) == 3:
@@ -85,23 +85,22 @@ class NodoConsenso(Nodo):
                         # Mensaje del detector de fallas
                         tipo, id_emisor = mensaje
                         if tipo == "INQUIRY":
-                            # Responder con ECHO si no estamos sospechosos
+                            # Responder si no es sospechoso
                             if self.id_nodo not in self.suspected:
                                 yield self.canal_salida.envia(("ECHO", self.id_nodo), [id_emisor])
                         elif tipo == "ECHO":
-                            # Marcar que el proceso no está caído
+                            #proceso no está caído
                             self.crashed[id_emisor] = False
-                    break
             yield env.timeout(0.01)
 
-            # Actualizar los valores recibidos
+            # Actualiza los valores recibidos
             valores_recibidos.update(mensajes_ronda)
 
-            # el valor propuesto es el mínimo recibido
+            # El valor propuesto es el mínimo recibido
             valor = min(valores_recibidos)
             ronda += 1
 
-        # Al finalizar, elige el líder si no es sospechoso
+        # Cuando termina elige el líder si no es sospechoso
         if self.id_nodo not in self.suspected:
             valores_validos = [item for item in self.V if item is not None and item not in self.suspected]
             if valores_validos:
@@ -113,14 +112,14 @@ class NodoConsenso(Nodo):
     def detector_fallas(self, env, f):
         '''Implementación del detector de fallas.'''
         while True:
-            # Repetir cada beta time units
+            # Repete cada beta time units
             for _ in range(self.beta):
-                # Enviar INQUIRY a todos los vecinos no sospechosos
+                # Envia INQUIRY a todos los vecinos no sospechosos
                 vecinos_no_sospechosos = [v for v in self.vecinos if v not in self.suspected]
                 if vecinos_no_sospechosos and self.id_nodo not in self.suspected:
                     yield self.canal_salida.envia(("INQUIRY", self.id_nodo), vecinos_no_sospechosos)
                 
-                # Reiniciar la lista crashed
+                # Reinicia la lista crashed
                 self.crashed = [True] * (len(self.vecinos) + 1)
                 
                 # Configura timer
@@ -134,6 +133,6 @@ class NodoConsenso(Nodo):
                 # Cuando el timer expira, actualiza suspected
                 self.suspected = {x for x in range(len(self.crashed)) if self.crashed[x] and x != self.id_nodo}
                 
-                # Si este nodo debe fallar, sale del detector
+                # Si el nodo debe fallar, sale del detector
                 if self.fallare:
                     return
